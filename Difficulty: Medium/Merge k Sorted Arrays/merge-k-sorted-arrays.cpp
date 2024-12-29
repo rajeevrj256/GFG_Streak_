@@ -22,15 +22,21 @@ class Solution
     vector<int> mergeKArrays(vector<vector<int>> arr, int K)
     {
         //code here
-        vector<int>merge_sorted_array;
+        priority_queue<int,vector<int>,greater<int>>minheap;
+        
         for(int i=0;i<arr.size();i++){
             for(int j=0;j<arr[0].size();j++){
-                merge_sorted_array.push_back(arr[i][j]);
+                minheap.push(arr[i][j]);
             }
         }
         
-        sort(merge_sorted_array.begin(),merge_sorted_array.end());
-        return merge_sorted_array;
+        vector<int>mergesortArry;
+        while(!minheap.empty()){
+            mergesortArry.push_back(minheap.top());
+            minheap.pop();
+        }
+        
+        return mergesortArry;
     }
 };
 
