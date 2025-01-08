@@ -110,37 +110,31 @@ class Solution {
         ajdcent_matrix(ajd,root->right);
         
     }
+     int dfs(unordered_map<int, list<int>>& adj, unordered_map<int, bool>& vis, int node) {
+        vis[node] = true;
+        int maxDepth = 0;
+
+        for (auto neighbor : adj[node]) {
+            if (!vis[neighbor]) {
+                maxDepth = max(maxDepth, dfs(adj, vis, neighbor));
+            }
+        }
+        return maxDepth + 1;  // Add 1 for the current node's level
+    }
     int minTime(Node* root, int target) 
     {
         // Your code goes here
-        unordered_map <int,list<int>>adj;
-        
-        ajdcent_matrix(adj,root);
-        queue<int>q;
-        q.push(target);
-        
-        unordered_map <int,bool>vis;
-        vis[target]=true;
-        int ans=0;
-        while(!q.empty()){
-            int n=q.size();
-            for(int i=0;i<n;i++){
-                int node=q.front();
-                q.pop();
-                
-                for(auto tra:adj[node]){
-                    if(!vis[tra]){
-                        q.push(tra);
-                        vis[tra]=true;
-                    }
-                }
-            }
-            ans++;
-            
-        }
-        return ans-1;
+        unordered_map<int, list<int>> adj;
+
+        ajdcent_matrix(adj, root);
+
+        unordered_map<int, bool> vis;
+
+        // Start DFS from the target node
+        return dfs(adj, vis, target) - 1;
     }
 };
+
 
 
 //{ Driver Code Starts.
