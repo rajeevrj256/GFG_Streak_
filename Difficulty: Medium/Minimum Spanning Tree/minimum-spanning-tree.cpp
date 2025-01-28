@@ -4,41 +4,78 @@ using namespace std;
 
 
 // } Driver Code Ends
+
+class DSU{
+    public:
+    vector<int>rank,parent;
+    
+    DSU(int n){
+       rank.resize(n,0);
+       parent.resize(n);
+       for(int i=0;i<n;i++){
+           parent[i]=i;
+       }
+       
+    }
+    
+    int find(int node){
+        if(node==parent[node])return node;
+        
+        return parent[node]=find(parent[node]);
+    }
+    
+    
+    void unionSet(int u,int v){
+        int find_u=find(u);
+        int find_v=find(v);
+        
+        if(find_u==find_v)return;
+        
+        if(rank[find_u]>rank[find_v]){
+            parent[find_v]=find_u;
+        }else if(rank[find_v]>rank[find_u]){
+            parent[find_u]=find_v;
+        }else{
+            parent[find_u]=find_v;
+            rank[find_v]++;
+        }
+    }
+};
+
+
 class Solution {
   public:
     // Function to find sum of weights of edges of the Minimum Spanning Tree.
     int spanningTree(int V, vector<vector<int>> adj[]) {
         // code here
-       
         
-        priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>>q;
-        vector<bool>vis(V,false);
+        vector<pair<int,pair<int,int>>>edges;
+        for(int i=0;i<V;i++){
+            for(auto it:adj[i]){
+                
+            edges.push_back({it[1],{i,it[0]}});
+            
+            }
+        }
         
-        //vis[0]=true;
-        q.push({0,0});
+        sort(edges.begin(),edges.end());
+        
+        DSU ds(V);
+        
         int sum=0;
-        while(!q.empty()){
-            int dist=q.top().first;
-            int node=q.top().second;
-            q.pop();
+        
+        for(auto it:edges){
+            int wt=it.first;
+            int u=it.second.first;
+            int v=it.second.second;
             
-            if(vis[node])continue;
-            vis[node]=true;
-            
-            sum+=dist;
-            
-            for(auto neighbor:adj[node]){
-                int nextNode = neighbor[0];
-                int edgeWeight = neighbor[1];
-                if(!vis[nextNode]){
-                    q.push({edgeWeight,nextNode});
-                }
+            if(ds.find(u)!=ds.find(v)){
+                sum+=wt;
+                ds.unionSet(u,v);
             }
         }
         
         return sum;
-        
-        
         
     }
 };
