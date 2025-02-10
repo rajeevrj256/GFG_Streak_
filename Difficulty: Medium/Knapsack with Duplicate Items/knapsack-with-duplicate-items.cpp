@@ -29,8 +29,30 @@ class Solution {
     int knapSack(vector<int>& val, vector<int>& wt, int capacity) {
         // code here
         int n=wt.size();
-        vector<vector<int>>dp(n,vector<int>(capacity+1,-1));
-        return help(val,wt,dp,n-1,capacity);
+        //vector<vector<int>>dp(n,vector<int>(capacity+1,0));
+        vector<int>dp(capacity+1,0);
+        
+        for(int i=0;i<=capacity;i++){
+            dp[i]=(i/wt[0])*val[0];
+        }
+        
+        for(int i=1;i<n;i++){
+           // vector<int>curr(capacity+1,0);
+            for(int j=0;j<=capacity;j++){
+                int skip=dp[j];
+                int take=0;
+                
+                if(wt[i]<=j){
+                    take=val[i]+dp[j-wt[i]];
+                }
+                
+                dp[j]=max(skip,take);
+            }
+           // dp=curr;
+            
+        }
+        
+        return dp[capacity];
     }
 };
 
