@@ -14,29 +14,28 @@ struct Node {
 // return the Kth largest element in the given BST rooted at 'root'
 class Solution {
   public:
-    void solve(Node* root,priority_queue<int>&maxheap){
-        if(root==NULL) return;
+  int count = 0;
+    int result = -1;
+
+    void reverseInorder(Node* root,int k){
+        if(root==NULL || count>=k) return ;
+        reverseInorder(root->right,k);
+        count++;
+        if(count==k){
+            result=root->data;
+            return;
+        }
         
-        maxheap.push(root->data);
-        solve(root->left,maxheap);
-        solve(root->right,maxheap);
+        reverseInorder(root->left,k);
     }
     int kthLargest(Node *root, int k) {
         // Your code here
         
-        if(root==NULL) return 0;
-        priority_queue<int>maxheap;
+         count = 0;
+        result = -1;
+        reverseInorder(root, k);
+        return result;
         
-        Node* temp=root;
-        
-        solve(temp,maxheap);
-        
-        while(k>1 && !maxheap.empty()){
-            maxheap.pop();
-            k--;
-        }
-        
-        return maxheap.empty()?0:maxheap.top();
         
     }
 };
